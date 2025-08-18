@@ -89,9 +89,6 @@ print(f'Количество чисел в запрещенном диапазо
 print(f'Количество всех чисел (0-{full_diapazon-1}): {full_diapazon}')
 
 osn_numpy = numpy.array(osn, dtype=object)  # Для numpy.mod
-inform_codes = []
-for i in range(work_diapazon):
-    inform_codes.append(numpy.mod(i, osn_numpy))
 
 inform_min_dists = []
 inform_max_dists = []
@@ -126,6 +123,10 @@ if save_to_file == 'yes':
         overall_inform_max = 0
         overall_control_min = float('inf')
         overall_control_max = 0
+
+        inform_codes = []
+        for i in range(work_diapazon):
+            inform_codes.append(numpy.mod(i, osn_numpy))
         
         #Запись разрешенного диапазона с расстояниями
         file.write('\n===== Разрешенный диапазон (информационный) с расстояниями =====\n')
@@ -164,6 +165,10 @@ if save_to_file == 'yes':
     print(f'Файл успешно создан: {filename}')
 else:
     #Если файл не создается, все равно нужно вычислить расстояния для вывода на экран
+    inform_codes = []
+    for i in range(work_diapazon):
+        inform_codes.append(numpy.mod(i, osn_numpy))
+
     for i in range(work_diapazon):
         code = numpy.mod(i, osn)
         min_dist, max_dist = calculate_distances(code, inform_codes)
