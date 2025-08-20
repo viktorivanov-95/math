@@ -3,7 +3,6 @@ import sys
 from collections import defaultdict
 from itertools import combinations, product
 
-#Вычисление расстояний Хэмминга
 def calculate_distances(code, codes_to_compare):
     distances = []
     for other_code in codes_to_compare:
@@ -11,7 +10,7 @@ def calculate_distances(code, codes_to_compare):
             continue  
         dist = np.sum(code != other_code)
         distances.append(dist)
-
+    
     if not distances:
         return 0, 0, []
     
@@ -20,6 +19,7 @@ def calculate_distances(code, codes_to_compare):
 def analyze_error_correction(code, inform_codes, osn):
     n = len(osn)
     error_stats = {i: {'total': 0, 'correctable': 0} for i in range(1, n+1)}
+    
     for error_count in range(1, n+1):
         for error_positions in combinations(range(n), error_count):
             error_values = []
@@ -106,7 +106,7 @@ def main():
     inform_min_dists = []
     inform_max_dists = []
     
-    #Для статистики по ошибкам
+    # Для статистики по ошибкам
     error_stats_sum = {i: {'correctable': 0, 'total': 0} for i in range(1, len(osn)+1)}
     
     print("\nВычисление информационных кодов...")
@@ -146,12 +146,12 @@ def main():
                 inform_min_dists.append(min_dist)
                 inform_max_dists.append(max_dist)
                 
-                #Обновляем статистику по ошибкам
+                # Обновляем статистику по ошибкам
                 for error_count in error_analysis:
                     error_stats_sum[error_count]['correctable'] += error_analysis[error_count]['correctable']
                     error_stats_sum[error_count]['total'] += error_analysis[error_count]['total']
                 
-                #Формируем строку с анализом ошибок
+                # Формируем строку с анализом ошибок
                 error_parts = []
                 for error_count in sorted(error_analysis.keys()):
                     stats = error_analysis[error_count]
@@ -169,12 +169,12 @@ def main():
                 if i % 100 == 0 and i > 0:
                     print(f"Обработано {i}/{work_diapazon} информационных чисел")
             
-            #Запись общей статистики
+            # Запись общей статистики
             file.write('\n===== Общая статистика =====\n')
             file.write(f'Минимальное расстояние в разрешенном диапазоне: {overall_inform_min}\n')
             file.write(f'Максимальное расстояние в разрешенном диапазоне: {overall_inform_max}\n')
             
-            #Статистика по исправлению ошибок
+            # Статистика по исправлению ошибок
             file.write('\nСредняя эффективность обнаружения ошибок:\n')
             for error_count in sorted(error_stats_sum.keys()):
                 if error_stats_sum[error_count]['total'] > 0:
@@ -192,7 +192,9 @@ def main():
             min_dist, max_dist, _ = calculate_distances(code, inform_codes)
             inform_min_dists.append(min_dist)
             inform_max_dists.append(max_dist)
-                        error_analysis = analyze_error_correction(code, inform_codes, osn)
+            
+            # Все равно собираем статистику по ошибкам
+            error_analysis = analyze_error_correction(code, inform_codes, osn)
             for error_count in error_analysis:
                 error_stats_sum[error_count]['correctable'] += error_analysis[error_count]['correctable']
                 error_stats_sum[error_count]['total'] += error_analysis[error_count]['total']
@@ -202,12 +204,12 @@ def main():
         
         print('Запись в файл пропущена.')
     
-    #Вывод статистики на экран
+    # Вывод статистики на экран
     print('\n===== Статистика по расстояниям =====')
     print(f'Минимальное расстояние в разрешенном диапазоне: {min(inform_min_dists)}')
     print(f'Максимальное расстояние в разрешенном диапазоне: {max(inform_max_dists)}')
     
-    #Вывод средней статистики по ошибкам
+    # Вывод средней статистики по ошибкам
     print('\n===== Средняя эффективность обнаружения ошибок =====')
     for error_count in sorted(error_stats_sum.keys()):
         if error_stats_sum[error_count]['total'] > 0:
@@ -217,7 +219,7 @@ def main():
         else:
             print(f'{error_count} ошибок: 0.00% (0/0)')
     
-    #Анализ ошибок для нескольких примеров
+    # Анализ ошибок для нескольких примеров
     print('\n===== Анализ исправления ошибок (первые 3 числа) =====')
     for i in range(min(3, work_diapazon)):
         code = inform_codes[i]
@@ -228,3 +230,6 @@ def main():
             error_parts.append(f"{error_count} ошибок - {stats['percentage']:.2f}% ({stats['correctable']}/{stats['total']})")
         error_str = ", ".join(error_parts)
         print(f'i = {i}, a = {code}, {error_str}')
+
+if __name__ == "__main__":
+    main()
