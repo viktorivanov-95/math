@@ -115,8 +115,8 @@ for i in range(osn_kontrol_kolvo):
     osn_kontrol[i] = int(input(f'Введите {i+1} контрольное основание: '))
 
 osn = numpy.concatenate((osn_inform, osn_kontrol))
-work_diapazon = numpy.prod(osn_inform.astype(object))
-full_diapazon = numpy.prod(osn.astype(object))
+work_diapazon = numpy.prod(osn_inform.astype(object))-1
+full_diapazon = numpy.prod(osn.astype(object))-1
 
 print(f'\nРабочий диапазон: 0-{work_diapazon-1} ({work_diapazon} чисел)')
 print(f'Полный диапазон: 0-{full_diapazon-1} ({full_diapazon} чисел)')
@@ -193,3 +193,4 @@ if file_created:
     print(f'\nПрограмма завершена. Результаты сохранены в файле: {filename}')
 else:
     print('\nПрограмма завершена. Файл не создавался.')
+
