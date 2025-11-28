@@ -173,12 +173,9 @@ def process_single_number(args):
     #Проверяем корректность результатов
     A_new = check_number(osn, new_method_result) if new_method_result is not None else None
     A_proj = check_number(osn, projection_result) if projection_result is not None else None
-    #Определяем статус
-    new_method_ok = (A_new == i) if new_method_result is not None else False
-    projection_ok = (A_proj == i) if projection_result is not None else False
     #Проверяем, находятся ли результаты в рабочем диапазоне
-    new_method_in_range = (A_new < work_diapazon) if new_method_result is not None else False
-    projection_in_range = (A_proj < work_diapazon) if projection_result is not None else False
+    new_method_ok = (A_new < work_diapazon) if new_method_result is not None else False
+    projection_ok = (A_proj < work_diapazon) if projection_result is not None else False
     #Проверяем совпадение результатов (оба None считаются совпадением)
     if new_method_result is None and projection_result is None:
         results_match = True
@@ -193,8 +190,8 @@ def process_single_number(args):
         'projection_result': projection_result,
         'new_method_ok': new_method_ok,
         'projection_ok': projection_ok,
-        'new_method_in_range': new_method_in_range,
-        'projection_in_range': projection_in_range,
+        'new_method_in_range': new_method_ok,
+        'projection_in_range': projection_ok,
         'results_match': results_match,
         'A_new': A_new,
         'A_proj': A_proj
@@ -221,11 +218,8 @@ def scientific_comparison(results, execution_time, max_error_correction):
     
     #Базовые метрики
     total_numbers = len(results)
-    new_method_correct = sum(1 for r in results if r['new_method_ok'])
-    projection_correct = sum(1 for r in results if r['projection_ok'])
-    new_method_in_range = sum(1 for r in results if r['new_method_in_range'])
-    projection_in_range = sum(1 for r in results if r['projection_in_range'])
-    results_match = sum(1 for r in results if r['results_match'])
+    new_method_correct = sum(1 for r in results if r['new_method_in_range'])
+    projection_correct = sum(1 for r in results if r['projection_in_range'])
     discrepancies = [r for r in results if not r['results_match']]
     
     #Эффективность исправления ошибок
@@ -260,8 +254,8 @@ def scientific_comparison(results, execution_time, max_error_correction):
         one_none_other_not = 0
         
         for disc in discrepancies:
-            new_ok = disc['new_method_ok']
-            proj_ok = disc['projection_ok']
+            new_ok = disc['new_method_in_range']
+            proj_ok = disc['projection_in_range']
             new_result = disc['new_method_result']
             proj_result = disc['projection_result']
             
