@@ -277,7 +277,7 @@ def scientific_comparison(results, execution_time, max_error_correction):
                 elif proj_ok and not new_ok:
                     projection_better += 1
                 elif not new_ok and not proj_ok:
-                    both_wrong += 1
+                    different_corrections += 1
                     
             #Оба метода вернули значения, но разные
             elif new_ok and not proj_ok:
@@ -285,13 +285,12 @@ def scientific_comparison(results, execution_time, max_error_correction):
             elif proj_ok and not new_ok:
                 projection_better += 1
             elif not new_ok and not proj_ok:
-                both_wrong += 1
+                different_corrections += 1
             else:  # оба правильные, но разные результаты
                 different_corrections += 1
         
         print(f'Случаев, когда новый метод лучше: {new_method_better}')
         print(f'Случаев, когда метод проекций лучше: {projection_better}')
-        print(f'Случаев, когда оба метода ошибаются: {both_wrong}')
         print(f'Случаев разных корректных исправлений: {different_corrections}')
         print(f'Случаев, когда один метод вернул None, а другой - значение: {one_none_other_not}')
         
@@ -480,7 +479,7 @@ def main():
                     elif disc['projection_ok'] and not disc['new_method_ok']:
                         file.write('Метод проекций корректен, новый метод ошибается\n')
                     elif not disc['new_method_ok'] and not disc['projection_ok']:
-                        file.write('Оба метода ошибаются\n')
+                        file.write('Оба метода корректны, но дают разные результаты\n')
                     else:
                         file.write('Оба метода корректны, но дают разные результаты\n')
                     
